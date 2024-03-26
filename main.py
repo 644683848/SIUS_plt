@@ -1,9 +1,9 @@
+import configparser
 import csv
-import json
 import os
 from datetime import datetime
 
-import matplotlib.pyplot as plt
+from databases import insert_data
 
 threshold_seconds = 5
 
@@ -185,62 +185,58 @@ def get_result(node, ground, spot, spot_aim_datatime, result, level):
         get_result(val, ground, spot, spot_aim_datatime, result, level + 1)
 
 
-# 根据成绩画出折线图
-def save_to_plot(x, y, path):
-    # Plotting the data
-    plt.plot(x, y, marker='o', linestyle='-')
-
-    # Formatting the plot
-    plt.title('Line Chart')
-    plt.xlabel('Date')
-    plt.ylabel('Value')
-    plt.grid(True)
-
-    # Rotating x-axis labels for better readability
-    plt.xticks(rotation=45)
-
-    # Displaying the plot
-    plt.tight_layout()
-    plt.savefig(path)
-    plt.close()
-
-
 if __name__ == '__main__':
     names = ["焦若璇", "高楠", "高莹", "张嘉轩", "李佳静"]
     # names = ["焦若璇"]
-    # directory = r'C:\Users\64468\Downloads\10M靶场18日-23日'
-    # spot_file_path = r'C:\Users\64468\Downloads\10M.csv'
-    # spot_and_time_field = get_spot_and_time_field(spot_file_path)
-    # # json_str = json.dumps(tmp, ensure_ascii=False, default=str)
-    # # print(json_str)
+    directory = r'C:\Users\64468\Downloads\10M靶场18日-23日'
+    spot_file_path = r'C:\Users\64468\Downloads\10M.csv'
+    spot_and_time_field = get_spot_and_time_field(spot_file_path)
+    # json_str = json.dumps(tmp, ensure_ascii=False, default=str)
+    # print(json_str)
+
+    # 根据每个运动员打靶的时间段获取成绩
+    spot_aim_datatime = filter_aim(directory)
+    result = []
+    get_result(spot_and_time_field, None, None, spot_aim_datatime, result, 0)
+
+    # rows = []
+    # for score_data in result:
+    #     for score in score_data["scores"]:
+    #         rows.append((score_data["athlete_name"], score_data["ground"], score_data["spot"], score[1], score[0]))
     #
-    # # 根据每个运动员打靶的时间段获取成绩
-    # spot_aim_datatime = filter_aim(directory)
-    # result = []
-    # get_result(spot_and_time_field, None, None, spot_aim_datatime, result, 0)
+    # table_name = 'athlete_scores'
+    # columns = ['athlete_name', 'ground', 'spot', 'scores', 'datetime']
+    # insert_data(table_name, columns, rows)
+
+    # # Create a ConfigParser object
+    # config = configparser.ConfigParser()
     #
+    # # Load the INI file
+    # config.read('exclude.ini')
+    #
+    # # Read values from the sections
+    # value1 = config['Section1']['key1']
+    # value2 = config['Section2']['key2']
+
     # json_str = json.dumps(result, ensure_ascii=False, default=str)
     # file_path = "output.json"
     # # Open the file in write mode and write the JSON string to it
     # with open(file_path, "w", encoding="utf-8") as file:
     #     file.write(json_str)
-
-    with open(r'C:\Users\64468\PycharmProjects\SIUS\output.json', 'r', encoding='utf-8') as file:
-        result = json.load(file)
-    cnt = 0
-    for item in result:
-        if item["athlete_name"] not in names:
-            continue
-        x = []
-        y = []
-        for key, val in item.items():
-            if key == "scores":
-                for score in val:
-                    x.append(datetime.strptime(score[0], "%Y-%m-%d %H:%M:%S.%f"))
-                    y.append(float(score[1]))
-        path = r"C:\Users\64468\PycharmProjects\SIUS" + '\\' + item["athlete_name"] + '-' + str(cnt)
-        if len(y) != 0:
-            save_to_plot(x, y, path)
-        cnt += 1
-
-
+    # with open(r'C:\Users\64468\PycharmProjects\SIUS\output.json', 'r', encoding='utf-8') as file:
+    #     result = json.load(file)
+    # cnt = 0
+    # for item in result:
+    #     if item["athlete_name"] not in names:
+    #         continue
+    #     x = []
+    #     y = []
+    #     for key, val in item.items():
+    #         if key == "scores":
+    #             for score in val:
+    #                 x.append(datetime.strptime(score[0], "%Y-%m-%d %H:%M:%S.%f"))
+    #                 y.append(float(score[1]))
+    #     path = r"C:\Users\64468\PycharmProjects\SIUS" + '\\' + item["athlete_name"] + '-' + str(cnt)
+    #     if len(y) != 0:
+    #         save_to_plot(x, y, path)
+    #     cnt += 1
