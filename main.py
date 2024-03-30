@@ -133,33 +133,36 @@ def filter_aim(_directory):
             for row in reader:
                 arr = row[0].split(';')
                 aim = arr[1]
+                tournament = arr[2]
                 aim4 = arr[4]
                 if aim4 != '0':
                     aim = aim4
-                ground = '10'
+                x = arr[8]
+                y = arr[9]
                 O_column = arr[14]
                 P_column = arr[15]
                 spot = str(arr[3])
                 time = str(arr[6])
-                print(csv_file)
                 try:
                     formatted_date = datetime.strptime(
-                        csv_file.replace('x', '').replace('X', '').replace('w', '').replace('W', '').replace('.csv', ''),
+                        csv_file.replace('x', '').replace('X', '').replace('w', '').replace('W', '').replace('.csv',
+                                                                                                             ''),
                         "%Y%m%d").strftime("%Y-%m-%d")
                 except ValueError as e:
                     print(e)
                     break
                 _date_time = formatted_date + ' ' + time
-                key = ground + ';' + spot
+                key = spot
                 if _spot_aim_datetime.get(key) is None:
                     _spot_aim_datetime[key] = []
                 _spot_aim_datetime[key].append(
-                    {"O_column": O_column, "P_column": P_column, "date_time": _date_time, "score": aim})
+                    {"tournament": tournament, "x": x, "y": y, "O_column": O_column, "P_column": P_column,
+                     "date_time": _date_time, "score": aim})
 
     return _spot_aim_datetime
 
 
-def find_score(ground, spot, begin_end_time, spot_aim_datetime):
+def find_score(spot, begin_end_time, spot_aim_datetime):
     def is_between(time, begin_end_time):
         time = datetime.strptime(time, '%Y-%m-%d %H:%M:%S.%f')
         begin = datetime.strptime(begin_end_time[0], '%Y-%m-%d %H:%M:%S')
@@ -167,9 +170,9 @@ def find_score(ground, spot, begin_end_time, spot_aim_datetime):
         return begin < time < end
 
     scores = []
-    if spot_aim_datetime.get(str(ground) + ';' + spot) is None:
+    if spot_aim_datetime.get(spot) is None:
         return scores
-    for time_and_score in spot_aim_datetime[str(ground) + ';' + spot]:
+    for time_and_score in spot_aim_datetime[spot]:
         if is_between(time_and_score["date_time"], begin_end_time):
             scores.append(time_and_score)
     return scores
@@ -189,10 +192,13 @@ def get_result(node, ground, spot, spot_aim_datetime, result, level):
                 for begin_end_time in times:
                     # 找到当前时间段内的成绩
                     # start_time = time.time()
-                    scores = find_score(ground, spot, begin_end_time, spot_aim_datetime)
+                    scores = find_score(spot, begin_end_time, spot_aim_datetime)
                     for score in scores:
                         result.append(
-                            {"athlete_name": _athlete_name, "ground": ground, "spot": spot, "O_column": score["O_column"],
+                            {"athlete_name": _athlete_name, "ground": ground, "spot": spot,
+                             "tournament": score["tournament"],
+                             "x": score["x"], "y": score["y"],
+                             "O_column": score["O_column"],
                              "P_column": score["P_column"], "date_time": score["date_time"], "score": score["score"]})
                     # elapsed_time = time.time() - start_time
                     # print(f"Elapsed time: {elapsed_time} seconds")
@@ -204,7 +210,7 @@ def get_result(node, ground, spot, spot_aim_datetime, result, level):
 if __name__ == '__main__':
     names = ["焦若璇", "高楠", "高莹", "张嘉轩", "李佳静"]
     # names = ["焦若璇"]
-    directory = r'C:\Users\64468\Downloads\50M靶场18日-23日'
+    directory = r'C:\Users\64468\Downloads\10M靶场18日-23日'
     spot_file_path = r'C:\Users\64468\Downloads\10M.csv'
     spot_and_time_field = get_spot_and_time_field(spot_file_path)
     # json_str = json.dumps(tmp, ensure_ascii=False, default=str)
@@ -218,14 +224,14 @@ if __name__ == '__main__':
     rows = []
     print("get_rows")
     for data in result:
-        rows.append((data["athlete_name"], data["ground"], data["spot"], data["score"], data["date_time"], data["O_column"], data["P_column"]))
+        rows.append((data["athlete_name"], data["ground"], data["spot"], data["score"], data["date_time"],
+                     data["tournament"], data["x"], data["y"], data["O_column"], data["P_column"]))
 
     table_name = 'athlete_scores'
-    columns = ['athlete_name', 'ground', 'spot', 'scores', 'datetime', 'O_column', 'P_column']
+    columns = ['athlete_name', 'ground', 'spot', 'scores', 'datetime', 'tournament', 'x', 'y', 'O_column', 'P_column']
     for i in range(0, len(rows), 10000):
         print(f"insert_data: {i}-{i + 10000} rows")
         insert_data(table_name, columns, rows[i:i + 10000])
-
 
     # # Create a ConfigParser object
     # config = configparser.ConfigParser()
