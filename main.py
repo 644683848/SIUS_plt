@@ -130,34 +130,63 @@ def filter_aim(_directory):
     for csv_file in csv_files:
         with open(os.path.join(_directory, csv_file), 'r', newline='') as file:
             reader = csv.reader(file)
+            try:
+                file_name = csv_file.replace('x', '').replace('X', '').replace('w', '').replace('W', '').replace('.csv',
+                                                                                                                 '')
+                if len(file_name) != 8:
+                    print(file_name)
+                    file_name = file_name[:-1]
+                formatted_date = datetime.strptime(file_name, "%Y%m%d").strftime("%Y-%m-%d")
+            except ValueError as e:
+                print(e)
+                break
             for row in reader:
                 arr = row[0].split(';')
+                A_column = arr[0]
                 aim = arr[1]
                 tournament = arr[2]
+                spot = str(arr[3])
                 aim4 = arr[4]
                 if aim4 != '0':
                     aim = aim4
+                if int(float(aim)) == 0 and int(float(aim4)) == 0:
+                    continue
+                F_column = arr[5]
+                time = str(arr[6])
+                H_column = arr[7]
                 x = arr[8]
                 y = arr[9]
+                K_column = arr[10]
+                L_column = arr[11]
+                M_column = arr[12]
+                N_column = arr[13]
                 O_column = arr[14]
                 P_column = arr[15]
-                spot = str(arr[3])
-                time = str(arr[6])
-                try:
-                    formatted_date = datetime.strptime(
-                        csv_file.replace('x', '').replace('X', '').replace('w', '').replace('W', '').replace('.csv',
-                                                                                                             ''),
-                        "%Y%m%d").strftime("%Y-%m-%d")
-                except ValueError as e:
-                    print(e)
-                    break
+                Q_column = arr[16]
+                R_column = arr[17]
+                S_column = arr[18]
+                T_column = arr[19]
+                U_column = arr[20]
+                V_column = arr[21]
+                W_column = arr[22]
+                X_column = arr[23]
+                Y_column = arr[24]
+                Z_column = arr[25]
+                AA_column = arr[26]
+                AB_column = arr[27]
                 _date_time = formatted_date + ' ' + time
                 key = spot
                 if _spot_aim_datetime.get(key) is None:
                     _spot_aim_datetime[key] = []
                 _spot_aim_datetime[key].append(
                     {"tournament": tournament, "x": x, "y": y, "O_column": O_column, "P_column": P_column,
-                     "date_time": _date_time, "score": aim})
+                     "date_time": _date_time, "score": aim,
+                     "A_column": A_column, "F_column": F_column, "H_column": H_column,
+                     "K_column": K_column, "L_column": L_column, "M_column": M_column,
+                     "N_column": N_column, "Q_column": Q_column, "R_column": R_column, "S_column": S_column,
+                     "T_column": T_column, "U_column": U_column, "V_column": V_column,
+                     "W_column": W_column, "X_column": X_column, "Y_column": Y_column,
+                     "Z_column": Z_column, "AA_column": AA_column, "AB_column": AB_column})
 
     return _spot_aim_datetime
 
@@ -199,7 +228,27 @@ def get_result(node, ground, spot, spot_aim_datetime, result, level):
                              "tournament": score["tournament"],
                              "x": score["x"], "y": score["y"],
                              "O_column": score["O_column"],
-                             "P_column": score["P_column"], "date_time": score["date_time"], "score": score["score"]})
+                             "P_column": score["P_column"], "date_time": score["date_time"], "score": score["score"],
+                             "A_column": score["A_column"],
+                             "F_column": score["F_column"],
+                             "H_column": score["H_column"],
+                             "K_column": score["K_column"],
+                             "L_column": score["L_column"],
+                             "M_column": score["M_column"],
+                             "N_column": score["N_column"],
+                             "Q_column": score["Q_column"],
+                             "R_column": score["R_column"],
+                             "S_column": score["S_column"],
+                             "T_column": score["T_column"],
+                             "U_column": score["U_column"],
+                             "V_column": score["V_column"],
+                             "W_column": score["W_column"],
+                             "X_column": score["X_column"],
+                             "Y_column": score["Y_column"],
+                             "Z_column": score["Z_column"],
+                             "AA_column": score["AA_column"],
+                             "AB_column": score["AB_column"]
+                             })
                     # elapsed_time = time.time() - start_time
                     # print(f"Elapsed time: {elapsed_time} seconds")
             continue
@@ -210,8 +259,8 @@ def get_result(node, ground, spot, spot_aim_datetime, result, level):
 if __name__ == '__main__':
     names = ["焦若璇", "高楠", "高莹", "张嘉轩", "李佳静"]
     # names = ["焦若璇"]
-    directory = r'C:\Users\64468\Downloads\10M靶场18日-23日'
-    spot_file_path = r'C:\Users\64468\Downloads\10M.csv'
+    directory = r'C:\Users\64468\Downloads\3_25-3_30\10米3.25-30'
+    spot_file_path = r'C:\Users\64468\Downloads\3_25-3_30\spot.csv'
     spot_and_time_field = get_spot_and_time_field(spot_file_path)
     # json_str = json.dumps(tmp, ensure_ascii=False, default=str)
     # print(json_str)
@@ -225,10 +274,18 @@ if __name__ == '__main__':
     print("get_rows")
     for data in result:
         rows.append((data["athlete_name"], data["ground"], data["spot"], data["score"], data["date_time"],
-                     data["tournament"], data["x"], data["y"], data["O_column"], data["P_column"]))
+                     data["tournament"], data["x"], data["y"], data["O_column"], data["P_column"],
+                     data["A_column"], data["F_column"], data["H_column"], data["K_column"],
+                     data["L_column"], data["M_column"], data["N_column"], data["Q_column"], data["R_column"],
+                     data["S_column"], data["T_column"], data["U_column"], data["V_column"],
+                     data["W_column"], data["X_column"], data["Y_column"], data["Z_column"],
+                     data["AA_column"], data["AB_column"]))
 
     table_name = 'athlete_scores'
-    columns = ['athlete_name', 'ground', 'spot', 'scores', 'datetime', 'tournament', 'x', 'y', 'O_column', 'P_column']
+    columns = ['athlete_name', 'ground', 'spot', 'scores', 'datetime', 'tournament', 'x', 'y', 'O_column', 'P_column',
+               'A_column', 'F_column', 'H_column', 'K_column', 'L_column', 'M_column',
+               'N_column', 'Q_column', 'R_column', 'S_column', 'T_column', 'U_column', 'V_column',
+               'W_column', 'X_column', 'Y_column', 'Z_column', 'AA_column', 'AB_column']
     for i in range(0, len(rows), 10000):
         print(f"insert_data: {i}-{i + 10000} rows")
         insert_data(table_name, columns, rows[i:i + 10000])
