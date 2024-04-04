@@ -63,5 +63,5 @@ if __name__ == '__main__':
                          "AA_column": score["AA_column"],
                          "AB_column": score["AB_column"]
                          })
-        table_name = 'competition_scores2'
+        table_name = 'athlete_scores'
         save_to_mysql(result, table_name)

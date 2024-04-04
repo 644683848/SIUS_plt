@@ -66,9 +66,10 @@ def filter_aim(_directory):
     csv_files = [file for file in files if
                  file.endswith('.csv') and not file.endswith('_mod.csv') and not file.endswith('_stl.csv')]
 
-    # Iterate over each CSV file and read its contents
     for csv_file in csv_files:
         if csv_file == "StartNumbersOfEntries.csv":
+            continue
+        if csv_file in ['20240103.csv', '20231016C_APWQ.csv', '20230927_男子十米气步枪决赛.csv']:
             continue
         with open(os.path.join(_directory, csv_file), 'r', newline='') as file:
             reader = csv.reader(file)
@@ -78,10 +79,11 @@ def filter_aim(_directory):
                             0:8]
                 formatted_date = datetime.strptime(file_name, "%Y%m%d").strftime("%Y-%m-%d")
             except ValueError as e:
-                print(e)
-                break
+                # print(e)
+                continue
             for row in reader:
-                arr = row[0].split(';')
+                if len(row) == 1:
+                    arr = row[0].split(';')
                 A_column = arr[0]
                 aim = arr[1]
                 tournament = arr[2]
