@@ -10,7 +10,7 @@ def save_to_mysql(rows, table_name, columns):
 
 if __name__ == '__main__':
     # table_name = "competition_scores2"
-    table_name = "athlete_scores"
+    table_name = "athlete_scores2"
     rows = fetch_all(table_name)
     scores_map = {}
     for row in rows:
@@ -44,4 +44,4 @@ if __name__ == '__main__':
             rows.append((athlete_name, key, max_scores, min_scores, avg))
 
     columns = ['athlete_name', 'date', 'high', 'low', 'avg']
-    save_to_mysql(rows, "statistic_scores", columns)
+    save_to_mysql(rows, "statistic_scores2", columns)

@@ -89,34 +89,35 @@ def solve(root):
 
 
 if __name__ == '__main__':
-    root = r'C:\Users\64468\Documents\workspace\HB\casual'
-    solve(root)
-    # directory = r'C:\Users\64468\Documents\workspace\HB\Data'
-    # spot_file_path = r'C:\Users\64468\Documents\workspace\HB\spot.csv'
-    # spot_and_time_field = get_spot_and_time_field(spot_file_path)
-    #
-    # # 根据每个运动员打靶的时间段获取成绩
-    # spot_aim_datetime = filter_aim(directory)
-    # result = []
-    # print("get_result")
-    # get_result(spot_and_time_field, None, None, spot_aim_datetime, result, 0)
-    #
-    # rows = []
-    # print("get_rows")
-    # for data in result:
-    #     rows.append((data["athlete_name"], data["ground"], data["spot"], data["score"], data["date_time"],
-    #                  data["tournament"], data["x"], data["y"], data["O_column"], data["P_column"],
-    #                  data["A_column"], data["F_column"], data["H_column"], data["K_column"],
-    #                  data["L_column"], data["M_column"], data["N_column"], data["Q_column"], data["R_column"],
-    #                  data["S_column"], data["T_column"], data["U_column"], data["V_column"],
-    #                  data["W_column"], data["X_column"], data["Y_column"], data["Z_column"],
-    #                  data["AA_column"], data["AB_column"]))
-    #
-    # table_name = 'athlete_scores'
-    # columns = ['athlete_name', 'ground', 'spot', 'scores', 'datetime', 'tournament', 'x', 'y', 'O_column', 'P_column',
-    #            'A_column', 'F_column', 'H_column', 'K_column', 'L_column', 'M_column',
-    #            'N_column', 'Q_column', 'R_column', 'S_column', 'T_column', 'U_column', 'V_column',
-    #            'W_column', 'X_column', 'Y_column', 'Z_column', 'AA_column', 'AB_column']
-    # for i in range(0, len(rows), 10000):
-    #     print(f"insert_data: {i}-{i + 10000} rows")
-    #     insert_data(table_name, columns, rows[i:i + 10000])
+    # root = r'C:\Users\64468\Documents\workspace\HB\casual'
+    # solve(root)
+
+    directory = r'C:\Users\64468\Documents\workspace\HB\3月\10M靶场18日-23日'
+    spot_file_path = r'C:\Users\64468\Documents\workspace\HB\3月\spot.csv'
+    spot_and_time_field = get_spot_and_time_field(spot_file_path)
+
+    # 根据每个运动员打靶的时间段获取成绩
+    spot_aim_datetime = filter_aim(directory)
+    result = []
+    print("get_result")
+    get_result(spot_and_time_field, None, None, spot_aim_datetime, result, 0)
+
+    rows = []
+    print("get_rows")
+    for data in result:
+        rows.append((data["athlete_name"], data["ground"], data["spot"], data["score"], data["date_time"],
+                     data["tournament"], data["x"], data["y"], data["O_column"], data["P_column"],
+                     data["A_column"], data["F_column"], data["H_column"], data["K_column"],
+                     data["L_column"], data["M_column"], data["N_column"], data["Q_column"], data["R_column"],
+                     data["S_column"], data["T_column"], data["U_column"], data["V_column"],
+                     data["W_column"], data["X_column"], data["Y_column"], data["Z_column"],
+                     data["AA_column"], data["AB_column"]))
+
+    table_name = 'athlete_scores3'
+    columns = ['athlete_name', 'ground', 'spot', 'scores', 'datetime', 'tournament', 'x', 'y', 'O_column', 'P_column',
+               'A_column', 'F_column', 'H_column', 'K_column', 'L_column', 'M_column',
+               'N_column', 'Q_column', 'R_column', 'S_column', 'T_column', 'U_column', 'V_column',
+               'W_column', 'X_column', 'Y_column', 'Z_column', 'AA_column', 'AB_column']
+    for i in range(0, len(rows), 10000):
+        print(f"insert_data: {i}-{i + 10000} rows")
+        insert_data(table_name, columns, rows[i:i + 10000])
